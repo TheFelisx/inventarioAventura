@@ -1,0 +1,32 @@
+{% extends 'base_panel.html' %}
+
+{% block title %}Grupo Inscrito - {{ experiencia.titulo }}{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h1 class="h3 mb-0 text-gray-800">{{ experiencia.titulo }}</h1>
+        <small class="text-muted">Fecha: {{ experiencia.fecha_hora|date:"d/m/Y H:i" }} | Cupos: {{ inscritos.count }}/{{ experiencia.cupo_maximo }}</small>
+    </div>
+    <a href="javascript:history.back()" class="btn btn-sm btn-secondary shadow-sm"><i class="fas fa-arrow-left fa-sm mr-1"></i>Volver</a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Turistas inscritos</h6></div>
+    <div class="card-body"><div class="table-responsive">
+        <table class="table table-bordered table-striped tabla-datos" width="100%" cellspacing="0">
+            <thead><tr><th>Turista</th><th>Correo</th><th>Teléfono</th><th>Estado Pago</th></tr></thead>
+            <tbody>
+                {% for ins in inscritos %}
+                <tr>
+                    <td class="font-weight-bold">{{ ins.turista.get_full_name|default:ins.turista.username }}</td>
+                    <td>{{ ins.turista.email }}</td>
+                    <td>{{ ins.turista.perfil.telefono|default:"-" }}</td>
+                    <td>{% include 'partials/_badge_pago.html' with estado=ins.estado_pago %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div></div>
+</div>
+{% endblock %}

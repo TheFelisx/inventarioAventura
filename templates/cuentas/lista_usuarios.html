@@ -1,0 +1,36 @@
+{% extends 'base_panel.html' %}
+
+{% block title %}Gestión de Usuarios - Aventuras del Sur{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Gestión de Guías y Turistas</h1>
+    <a href="{% url 'crear_usuario' %}" class="btn btn-sm btn-primary shadow-sm"><i class="fas fa-user-plus fa-sm text-white-50 mr-1"></i>Nuevo Usuario</a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Usuarios del sistema</h6></div>
+    <div class="card-body"><div class="table-responsive">
+        <table class="table table-bordered table-striped tabla-datos" width="100%" cellspacing="0">
+            <thead><tr><th>Usuario</th><th>Nombre Completo</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td class="font-weight-bold">{{ u.username }}</td>
+                    <td>{{ u.get_full_name }}</td>
+                    <td>{{ u.email }}</td>
+                    <td><span class="badge {% if u.perfil.rol == 'GUIA' %}badge-primary{% else %}badge-secondary{% endif %}">{{ u.perfil.get_rol_display }}</span></td>
+                    <td>{% if u.is_active %}<span class="badge badge-success estado-badge">Activo</span>{% else %}<span class="badge badge-secondary estado-badge">Inactivo</span>{% endif %}</td>
+                    <td class="text-nowrap">
+                        <a href="{% url 'editar_usuario' u.id %}" class="btn btn-warning btn-circle btn-sm" title="Editar"><i class="fas fa-pen"></i></a>
+                        <form class="d-inline" method="post" action="{% url 'eliminar_usuario' u.id %}" onsubmit="return confirm('¿Eliminar este usuario?')">
+                            {% csrf_token %}<button type="submit" class="btn btn-danger btn-circle btn-sm" title="Eliminar"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div></div>
+</div>
+{% endblock %}

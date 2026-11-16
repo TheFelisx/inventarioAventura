@@ -1,0 +1,29 @@
+{% load static %}<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+<!-- SB Admin 2 (incluye Bootstrap 4) -->
+<link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+<style>
+    /* Paleta Aventuras del Sur sobre SB Admin 2 */
+    :root { --eco-verde:#2e6f40; --eco-oscuro:#1e4620; --eco-dorado:#c08a4f; }
+    .bg-gradient-ecoparque { background-color:var(--eco-verde); background-image:linear-gradient(180deg,var(--eco-verde) 10%,var(--eco-oscuro) 100%); background-size:cover; }
+    .btn-primary { background-color:var(--eco-verde); border-color:var(--eco-verde); }
+    .btn-primary:hover, .btn-primary:focus { background-color:var(--eco-oscuro); border-color:var(--eco-oscuro); }
+    .btn-dorado { background-color:var(--eco-dorado); border-color:var(--eco-dorado); color:#fff; }
+    .btn-dorado:hover { background-color:#a8753f; border-color:#a8753f; color:#fff; }
+    .text-primary { color:var(--eco-verde) !important; }
+    .border-left-primary { border-left:.25rem solid var(--eco-verde) !important; }
+    .bg-ecoparque { background-color:var(--eco-verde) !important; }
+    a { color:var(--eco-verde); } a:hover { color:var(--eco-oscuro); }
+    .page-item.active .page-link { background-color:var(--eco-verde); border-color:var(--eco-verde); }
+    .page-link { color:var(--eco-verde); }
+    .estado-badge { font-size:.72rem; letter-spacing:.03em; text-transform:uppercase; }
+    .exp-thumb { height:170px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.92); font-size:3rem; }
+    .exp-thumb.t0 { background:linear-gradient(135deg,#7aa6bd,#3f7a4d); }
+    .exp-thumb.t1 { background:linear-gradient(135deg,#4f8a5b,#1f4a2c); }
+    .exp-thumb.t2 { background:linear-gradient(135deg,#6aa3c4,#2b6a8a); }
+    /* Portada: la imagen de fondo viene por link en la variable --hero-img (se define en inicio.html).
+       Si no hay link o la imagen no carga, se ve el degradado verde. */
+    .hero { color:#fff; background-image:linear-gradient(rgba(20,45,28,.45),rgba(20,45,28,.6)),var(--hero-img,none),linear-gradient(160deg,#8fb3c9 0,#4f7a6a 45%,#1e4620 100%); background-size:cover; background-position:center; background-repeat:no-repeat; }
+    .exp-img { width:100%; height:170px; object-fit:cover; display:block; }
+    .exp-grande { height:280px !important; }
+</style>

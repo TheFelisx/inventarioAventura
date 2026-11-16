@@ -1,0 +1,7 @@
+{% comment %}Muestra la imagen de la experiencia (campo imagen_url, un link). Si no tiene o el link falla, muestra un degradado con ícono. Uso: {% include 'partials/_exp_imagen.html' with exp=exp icono='fa-hiking' tono='0' grande=False %}{% endcomment %}
+{% if exp.imagen_url %}
+<img src="{{ exp.imagen_url }}" alt="{{ exp.titulo }}" class="exp-img{% if grande %} exp-grande{% endif %}" loading="lazy" referrerpolicy="no-referrer"
+     onerror="var d=document.createElement('div');d.className='exp-thumb t{{ tono|default:'0' }}{% if grande %} exp-grande{% endif %}';d.innerHTML='<i class=&quot;fas {{ icono|default:'fa-mountain' }}&quot;></i>';this.replaceWith(d);">
+{% else %}
+<div class="exp-thumb t{{ tono|default:'0' }}{% if grande %} exp-grande{% endif %}"><i class="fas {{ icono|default:'fa-mountain' }}"></i></div>
+{% endif %}

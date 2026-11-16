@@ -1,0 +1,39 @@
+{% extends 'base_panel.html' %}
+
+{% block title %}Mis Reservas - Aventuras del Sur{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Historial de Mis Reservas</h1>
+    <a href="{% url 'catalogo_publico' %}" class="btn btn-sm btn-primary shadow-sm"><i class="fas fa-compass fa-sm text-white-50 mr-1"></i>Reservar Nueva Actividad</a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Mis inscripciones</h6></div>
+    <div class="card-body"><div class="table-responsive">
+        <table class="table table-bordered table-striped tabla-datos" width="100%" cellspacing="0">
+            <thead><tr><th>Actividad</th><th>Fecha Evento</th><th>Valor</th><th>Estado Pago</th><th>Acciones</th></tr></thead>
+            <tbody>
+                {% for res in reservas %}
+                <tr>
+                    <td class="font-weight-bold">{{ res.experiencia.titulo }}</td>
+                    <td>{{ res.experiencia.fecha_hora|date:"d/m/Y H:i" }}</td>
+                    <td>${{ res.experiencia.precio|floatformat:0 }}</td>
+                    <td>{% include 'partials/_badge_pago.html' with estado=res.estado_pago %}</td>
+                    <td class="text-nowrap">
+                        {% if res.estado_pago == 'PENDIENTE' %}
+                            <a href="{% url 'confirmar_pago' res.id %}" class="btn btn-success btn-sm"><i class="fas fa-credit-card mr-1"></i>Confirmar Pago</a>
+                            <form class="d-inline" method="post" action="{% url 'cancelar_reserva' res.id %}" onsubmit="return confirm('¿Cancelar esta reserva?')">
+                                {% csrf_token %}<button type="submit" class="btn btn-outline-danger btn-sm">Cancelar</button>
+                            </form>
+                        {% else %}
+                            <span class="text-success small font-weight-bold"><i class="fas fa-check-circle"></i> Ticket Listo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div></div>
+</div>
+{% endblock %}

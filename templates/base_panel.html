@@ -1,0 +1,162 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel - Aventuras del Sur{% endblock %}</title>
+    {% include 'partials/_estilos.html' %}
+    <!-- DataTables (integración Bootstrap 4) -->
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+</head>
+<body id="page-top">
+{% with rol=user.perfil.rol url=request.resolver_match.url_name %}
+<div id="wrapper">
+
+    <!-- ===== Sidebar (SB Admin 2) ===== -->
+    <ul class="navbar-nav bg-gradient-ecoparque sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'redireccion_rol' %}">
+            <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-mountain"></i></div>
+            <div class="sidebar-brand-text mx-3">Aventuras del Sur</div>
+        </a>
+
+        <hr class="sidebar-divider my-0">
+
+        <li class="nav-item {% if url == 'panel_admin' or url == 'panel_guia' or url == 'panel_turista' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'redireccion_rol' %}"><i class="fas fa-fw fa-tachometer-alt"></i><span>Panel Principal</span></a>
+        </li>
+
+        {% if rol == 'ADMIN' %}
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">Administración</div>
+            <li class="nav-item {% if url == 'lista_usuarios' or url == 'crear_usuario' or url == 'editar_usuario' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'lista_usuarios' %}"><i class="fas fa-fw fa-users"></i><span>Usuarios</span></a>
+            </li>
+            <li class="nav-item {% if url == 'lista_categorias' or url == 'crear_categoria' or url == 'editar_categoria' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'lista_categorias' %}"><i class="fas fa-fw fa-folder"></i><span>Categorías</span></a>
+            </li>
+            <li class="nav-item {% if url == 'lista_experiencias' or url == 'crear_experiencia' or url == 'editar_experiencia' or url == 'detalle_grupo_experiencia' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'lista_experiencias' %}"><i class="fas fa-fw fa-hiking"></i><span>Experiencias</span></a>
+            </li>
+            <li class="nav-item {% if url == 'todas_las_reservas' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'todas_las_reservas' %}"><i class="fas fa-fw fa-calendar-check"></i><span>Reservas Globales</span></a>
+            </li>
+        {% endif %}
+
+        {% if rol == 'GUIA' %}
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">Operación</div>
+            <li class="nav-item {% if url == 'lista_experiencias' or url == 'editar_experiencia' or url == 'detalle_grupo_experiencia' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'lista_experiencias' %}"><i class="fas fa-fw fa-hiking"></i><span>Mis Experiencias</span></a>
+            </li>
+            <li class="nav-item {% if url == 'crear_experiencia' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'crear_experiencia' %}"><i class="fas fa-fw fa-plus-circle"></i><span>Nueva Experiencia</span></a>
+            </li>
+        {% endif %}
+
+        {% if rol == 'TURISTA' %}
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">Mi viaje</div>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'catalogo_publico' %}"><i class="fas fa-fw fa-compass"></i><span>Explorar Catálogo</span></a>
+            </li>
+            <li class="nav-item {% if url == 'panel_turista' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'panel_turista' %}"><i class="fas fa-fw fa-ticket-alt"></i><span>Mis Reservas</span></a>
+            </li>
+        {% endif %}
+
+        <hr class="sidebar-divider">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'inicio' %}"><i class="fas fa-fw fa-globe"></i><span>Sitio Público</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-fw fa-sign-out-alt"></i><span>Cerrar Sesión</span></a>
+        </li>
+
+        <hr class="sidebar-divider d-none d-md-block">
+        <div class="text-center d-none d-md-inline"><button class="rounded-circle border-0" id="sidebarToggle"></button></div>
+    </ul>
+
+    <!-- ===== Contenido ===== -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3"><i class="fa fa-bars"></i></button>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                {{ user.get_full_name|default:user.username }}
+                                <span class="badge badge-warning ml-1">{{ user.perfil.get_rol_display }}</span>
+                            </span>
+                            <i class="fas fa-user-circle fa-2x text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="{% url 'inicio' %}"><i class="fas fa-globe fa-sm fa-fw mr-2 text-gray-400"></i>Sitio público</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar sesión</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="container-fluid">
+                {% include 'partials/_mensajes.html' %}
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto"><div class="copyright text-center my-auto"><span>&copy; 2026 Ecoparque y Reserva Natural "Aventuras del Sur"</span></div></div>
+        </footer>
+    </div>
+</div>
+
+<a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+
+<!-- Modal de cierre de sesión (POST, requerido por Django) -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">¿Listo para salir?</h5>
+            <button class="close" type="button" data-dismiss="modal"><span>&times;</span></button></div>
+        <div class="modal-body">Selecciona "Cerrar Sesión" para terminar tu sesión actual.</div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+            <form method="post" action="{% url 'logout' %}" class="m-0">{% csrf_token %}<button type="submit" class="btn btn-primary">Cerrar Sesión</button></form>
+        </div>
+    </div></div>
+</div>
+{% endwith %}
+
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+    // DataTables en español (incluido aquí para no depender de internet)
+    $(document).ready(function () {
+        $('.tabla-datos').DataTable({
+            order: [],
+            language: {
+                decimal: ',', thousands: '.',
+                emptyTable: 'No hay datos disponibles en la tabla',
+                info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+                infoEmpty: 'Mostrando 0 a 0 de 0 registros',
+                infoFiltered: '(filtrado de _MAX_ registros en total)',
+                lengthMenu: 'Mostrar _MENU_ registros',
+                loadingRecords: 'Cargando...',
+                processing: 'Procesando...',
+                search: 'Buscar:',
+                zeroRecords: 'No se encontraron registros coincidentes',
+                paginate: { first: 'Primero', last: 'Último', next: 'Siguiente', previous: 'Anterior' },
+                aria: { sortAscending: ': activar para ordenar ascendente', sortDescending: ': activar para ordenar descendente' }
+            }
+        });
+    });
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,20 @@
+CREDENCIALES - Proyecto inventarioAventura (aventurasDB)
+=========================================================
+
+ADMINISTRADOR
+  Usuario:     admin
+  Contraseña:  12345678
+
+GUIAS
+  Usuario:     guia_carla
+  Contraseña:  Aventura2026*
+
+  Usuario:     guia_diego
+  Contraseña:  Aventura2026*
+
+TURISTAS
+  Usuario:     turista_ana
+  Contraseña:  Aventura2026*
+
+  Usuario:     turista_pablo
+  Contraseña:  Aventura2026*

@@ -1,0 +1,47 @@
+{% extends 'base_publica.html' %}
+
+{% block title %}{{ experiencia.titulo }} - Aventuras del Sur{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow border-0 overflow-hidden">
+                {% include 'partials/_exp_imagen.html' with exp=experiencia icono='fa-mountain' tono='0' grande=True %}
+                <div class="card-header bg-ecoparque text-white py-3">
+                    <span class="badge badge-warning mb-1">{{ experiencia.categoria.nombre }}</span>
+                    <h3 class="mb-0 font-weight-bold">{{ experiencia.titulo }}</h3>
+                </div>
+                <div class="card-body p-4">
+                    <p class="lead">{{ experiencia.descripcion|linebreaksbr }}</p>
+                    <hr>
+                    <div class="row mb-4">
+                        <div class="col-6 col-md-3 mb-3"><small class="text-muted d-block">Fecha y Hora</small><strong>{{ experiencia.fecha_hora|date:"d/m/Y H:i" }}</strong></div>
+                        <div class="col-6 col-md-3 mb-3"><small class="text-muted d-block">Valor por persona</small><strong class="text-primary h5">${{ experiencia.precio|floatformat:0 }}</strong></div>
+                        <div class="col-6 col-md-3 mb-3"><small class="text-muted d-block">Cupos Libres</small><strong>{{ cupos_disponibles }} de {{ experiencia.cupo_maximo }}</strong></div>
+                        <div class="col-6 col-md-3 mb-3"><small class="text-muted d-block">Guía a cargo</small><strong>{{ experiencia.creador.get_full_name|default:experiencia.creador.username }}</strong></div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-between">
+                        <a href="{% url 'catalogo_publico' %}" class="btn btn-outline-secondary mb-2 mb-sm-0"><i class="fas fa-arrow-left mr-1"></i>Volver al Catálogo</a>
+
+                        {% if cupos_disponibles > 0 %}
+                            {% if user.is_authenticated %}
+                                {% if user.perfil.rol == 'TURISTA' %}
+                                    <a href="{% url 'reservar_experiencia' experiencia.id %}" class="btn btn-primary font-weight-bold px-4"><i class="fas fa-ticket-alt mr-2"></i>Confirmar Reserva</a>
+                                {% else %}
+                                    <span class="badge badge-secondary align-self-center p-2">Solo los Turistas pueden reservar</span>
+                                {% endif %}
+                            {% else %}
+                                <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-dorado font-weight-bold px-4"><i class="fas fa-sign-in-alt mr-2"></i>Inicia Sesión para Reservar</a>
+                            {% endif %}
+                        {% else %}
+                            <button class="btn btn-danger" disabled>Cupos Agotados</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

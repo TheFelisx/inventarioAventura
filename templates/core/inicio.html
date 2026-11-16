@@ -1,0 +1,42 @@
+{% extends 'base_publica.html' %}
+
+{% block title %}Inicio - Ecoparque Aventuras del Sur{% endblock %}
+
+{% block content %}
+<!-- Imagen de fondo de la portada: cambia el link dentro de url('...') -->
+<section class="hero text-center py-5" style="--hero-img:url('https://picsum.photos/seed/aventuras-sur-portada/1920/800');">
+    <div class="container py-5">
+        <h1 class="display-4 font-weight-bold">Explora la Naturaleza Inolvidable</h1>
+        <p class="lead mb-4">Reserva tu aventura en el Ecoparque y Reserva Natural "Aventuras del Sur"</p>
+        <a href="{% url 'catalogo_publico' %}" class="btn btn-primary btn-lg font-weight-bold px-4"><i class="fas fa-compass mr-2"></i>Descubrir</a>
+    </div>
+</section>
+
+<section class="container my-5">
+    <h2 class="text-center font-weight-bold mb-4 text-gray-800">Actividades Destacadas</h2>
+    <div class="row">
+        {% for exp in experiencias_destacadas %}
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="card shadow h-100 border-0 overflow-hidden">
+                    {% include 'partials/_exp_imagen.html' with exp=exp icono=forloop.counter0|divisibleby:2|yesno:'fa-hiking,fa-tree' tono=forloop.counter0|divisibleby:2|yesno:'0,1' %}
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge badge-success align-self-start mb-2">{{ exp.categoria.nombre }}</span>
+                        <h5 class="card-title font-weight-bold">{{ exp.titulo }}</h5>
+                        <p class="card-text text-muted small flex-grow-1">{{ exp.descripcion|truncatewords:20 }}</p>
+                        <ul class="list-unstyled small text-gray-600 mb-3">
+                            <li><i class="far fa-calendar-alt mr-1"></i>{{ exp.fecha_hora|date:"d/m/Y H:i" }}</li>
+                            <li><i class="fas fa-users mr-1"></i>Cupo máximo: {{ exp.cupo_maximo }} personas</li>
+                        </ul>
+                        <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                            <span class="h5 mb-0 font-weight-bold text-primary">${{ exp.precio|floatformat:0 }}</span>
+                            <a href="{% url 'detalle_experiencia' exp.id %}" class="btn btn-primary btn-sm">Reservar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center text-muted py-4"><p>No hay actividades próximas publicadas en este momento.</p></div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

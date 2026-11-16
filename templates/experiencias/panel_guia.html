@@ -1,0 +1,33 @@
+{% extends 'base_panel.html' %}
+
+{% block title %}Panel Guía - Aventuras del Sur{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Mis Experiencias Asignadas</h1>
+    <a href="{% url 'crear_experiencia' %}" class="btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50 mr-1"></i>Nueva Experiencia</a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Experiencias registradas por mí</h6></div>
+    <div class="card-body"><div class="table-responsive">
+        <table class="table table-bordered table-hover tabla-datos" width="100%" cellspacing="0">
+            <thead><tr><th>Título</th><th>Categoría</th><th>Fecha / Hora</th><th>Inscritos</th><th>Acciones</th></tr></thead>
+            <tbody>
+                {% for exp in experiencias %}
+                <tr>
+                    <td class="font-weight-bold">{{ exp.titulo }}</td>
+                    <td>{{ exp.categoria.nombre }}</td>
+                    <td>{{ exp.fecha_hora|date:"d/m/Y H:i" }}</td>
+                    <td>{{ exp.inscripciones.count }} / {{ exp.cupo_maximo }}</td>
+                    <td class="text-nowrap">
+                        <a href="{% url 'detalle_grupo_experiencia' exp.id %}" class="btn btn-info btn-circle btn-sm" title="Ver Turistas"><i class="fas fa-users"></i></a>
+                        <a href="{% url 'editar_experiencia' exp.id %}" class="btn btn-warning btn-circle btn-sm" title="Editar"><i class="fas fa-pen"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div></div>
+</div>
+{% endblock %}
